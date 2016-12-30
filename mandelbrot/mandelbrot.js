@@ -52,7 +52,7 @@ $(document).ready(function() {
         else {
             // Set the values
             // For title
-            var title_text = $('title').text() +current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
+            var title_text = $('title').text() +' '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
             $('title').text(title_text);
             // For inputs
             $("input[name$='Xmin']").val(current_url[6]);
