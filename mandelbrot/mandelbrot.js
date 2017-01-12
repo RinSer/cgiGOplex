@@ -52,7 +52,7 @@ $(document).ready(function() {
         else {
             // Set the values
             // For title
-            var title_text = $('title').text() +' '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
+            var title_text = $('title').text() +current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
             $('title').text(title_text);
             // For inputs
             $("input[name$='Xmin']").val(current_url[6]);
@@ -62,10 +62,13 @@ $(document).ready(function() {
             // Set the picture
             var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
             $.get(query, function(){
-                $('#set').attr('src', 'img/loading.gif');
+                $('#mset').hide();
+		$('#load').show();
             }).done(function(data) {
                 var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
-                $('#set').attr('src', img_string);
+                $('#mset').attr('src', img_string);
+		$('#load').hide();
+		$('#mset').show();
             });
             // Set the color scheme
             var background_color = current_url[13];
@@ -93,38 +96,38 @@ $(document).ready(function() {
                     break;
             }
             // Set the color
-            var red = 0;
-            var green = 0;
-            var blue = 0;
+            var redColor = 0;
+            var greenColor = 0;
+            var blueColor = 0;
             if (color.indexOf('r') >= 0) {
-                red = 255;
-                $('#red').prop('checked', true);
+                redColor = 255;
+                $('#redColor').prop('checked', true);
             }
             if (color.indexOf('g') >= 0) {
-                green = 255;
-                $('#green').prop('checked', true);
+                greenColor = 255;
+                $('#greenColor').prop('checked', true);
             }
             if (color.indexOf('b') >= 0) {
-                blue = 255;
-                $('#blue').prop('checked', true);
+                blueColor = 255;
+                $('#blueColor').prop('checked', true);
             }
             // Visibility check
             if (background_color == 'b') {
-                if (red == 0 && green == 0 && blue == 0) {
-                    red = 255;
-                    green = 255;
-                    blue = 255;
+                if (redColor == 0 && greenColor == 0 && blueColor == 0) {
+                    redColor = 255;
+                    greenColor = 255;
+                    blueColor = 255;
                 }
             }
             if (background_color == 'w') {
-                if (red == 255 && green == 255 && blue == 255) {
-                    red = 0;
-                    green = 0;
-                    blue = 0;
+                if (redColor == 255 && greenColor == 255 && blueColor == 255) {
+                    redColor = 0;
+                    greenColor = 0;
+                    blueColor = 0;
                 }
             }
             // Set the css colors        
-            var current_color = 'rgba('+String(red)+', '+String(green)+', '+String(blue)+', 0.66)';
+            var current_color = 'rgba('+String(redColor)+', '+String(greenColor)+', '+String(blueColor)+', 0.66)';
             $('body').css('color', current_color);
             $('a').css('color', current_color);
             $('h2').css('border-color', current_color);
@@ -224,16 +227,16 @@ $(document).ready(function() {
         });
         $('#colorForm').submit(function(event) {
             event.preventDefault();
-            current_url[13] = $('#background').val();
+            current_url[13] = $('#backgroundColor').val();
             var new_color = "";
-            if ($('#red').prop('checked')) {
-                new_color += $('#red').val();
+            if ($('#redColor').prop('checked')) {
+                new_color += $('#redColor').val();
             }
-            if ($('#green').prop('checked')) {
-                new_color += $('#green').val();
+            if ($('#greenColor').prop('checked')) {
+                new_color += $('#greenColor').val();
             }
-            if ($('#blue').prop('checked')) {
-                new_color += $('#blue').val();
+            if ($('#blueColor').prop('checked')) {
+                new_color += $('#blueColor').val();
             }
             current_url[14] = new_color;
             window.location.href = makeString(current_url, '_');

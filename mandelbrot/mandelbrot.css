@@ -91,6 +91,10 @@ select {
     text-align: center;
 }
 
+#mset {
+    display: none;
+}
+
 @media (max-width: 1169px) {
 
     .col-lg-3 {
