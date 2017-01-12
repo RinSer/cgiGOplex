@@ -6,6 +6,8 @@
 <mate author="RinSer">
 <title>Julia set f(x) = z^2+c</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
+<script src="load.js"></script>
 <script src="julia.js"></script>
 <link rel="stylesheet" href="julia.css"> 
 </head>
@@ -44,20 +46,21 @@
     </section>
     <section class="col-lg-3 middle">
         <div>
-		    <img id="set" src="img/loading.gif"/>
-	    </div>
+            <div id="load"></div>
+            <img id="jset" src=""/>
+	</div>
         <div id="cursorRect"></div>
     </section>
     <section class="col-lg-3 side">
         <h2 id="colorScheme">Color scheme</h2>
         <form id="colorForm">
-            <select id="background" name="background" form="colorForm">
+            <select id="backgroundColor" name="backgroundColor" form="colorForm">
               <option id="black" value="b">Black background</option>
               <option id="white" value="w">White background</option>
             </select>
-            <input type="checkbox" id="red" name="red" value="r">Red<br>
-            <input type="checkbox" id="green" name="green" value="g">Green<br>
-            <input type="checkbox" id="blue" name="blue" value="b">Blue<br>
+            <input type="checkbox" id="redColor" name="redColor" value="r">Red<br>
+            <input type="checkbox" id="greenColor" name="greenColor" value="g">Green<br>
+            <input type="checkbox" id="blueColor" name="blueColor" value="b">Blue<br>
             <input type="submit" value="Change">
         </form>
         <a href="https://en.wikipedia.org/wiki/Julia_set" target="_blank"><h2>Wikipedia</h2></a>

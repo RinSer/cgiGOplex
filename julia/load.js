@@ -22,10 +22,10 @@ function setup() {
     var loader = createCanvas(canvasWidth, canvasHeight);
     loader.parent('#load');
     // Set the background
-    if (url[13] == 'b') {
+    if (url[17] == 'b') {
       backgroundColor = 0;
       strokeColor = 255;
-    } else if (url[13] == 'w') {
+    } else if (url[17] == 'w') {
       backgroundColor = 255;
       strokeColor = 0;
     }
@@ -34,18 +34,18 @@ function setup() {
     redC = 0;
     greenC = 0;
     blueC = 0;
-    if (url[14].indexOf('r') >= 0) {
+    if (url[18].indexOf('r') >= 0) {
       redC = 255;
     }
-    if (url[14].indexOf('g') >= 0) {
+    if (url[18].indexOf('g') >= 0) {
       greenC = 255;
     }
-    if (url[14].indexOf('b') >= 0) {
+    if (url[18].indexOf('b') >= 0) {
       blueC = 255;
     }
     // Set the rect mode and initialize squares
     rectMode(CENTER);
-    fractal = new Squares(0, 0, canvasWidth/2, canvasHeight/2);
+    fractal = new Squares(0, 0, canvasWidth/3, canvasHeight/3);
   }
 }
 
@@ -54,7 +54,7 @@ function draw() {
   if (url.length > 2) {
     background(backgroundColor);
     stroke(strokeColor);
-    fill(color(redC, greenC, blueC, 175));
+    fill(color(redC, greenC, blueC, 125));
     translate(canvasWidth/2, canvasHeight/2);
     //rotate(radians(frameCount));
     fractal.display();
@@ -63,7 +63,7 @@ function draw() {
       fractal.reset();
       counter = 0;
     } else {
-      fractal.nextInside();
+      fractal.nextOutside();
       counter++;
     }
   }

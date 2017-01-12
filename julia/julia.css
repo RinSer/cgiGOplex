@@ -67,6 +67,11 @@ div {
     text-align: center;
 }
 
+canvas {
+    margin: 0;
+    padding: 0;
+}
+
 #cursorRect {
     width: 160px;
     height: 160px;
@@ -83,6 +88,10 @@ div {
 select {
     width: 100%;
     border: none;
+}
+
+#jset {
+    display: none;
 }
 
 .col-lg-3 {
