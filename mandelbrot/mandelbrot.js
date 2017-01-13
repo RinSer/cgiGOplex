@@ -162,7 +162,32 @@ $(document).ready(function() {
             current_url[8] = String(x_mx.toFixed(12));
             current_url[10] = String(y_mn.toFixed(12));
             current_url[12] = String(y_mx.toFixed(12));
-            window.location.href = makeString(current_url, '_');
+            var new_url = makeString(current_url, '_');
+            // Design
+            $('#mset').hide();
+	    $('#load').show();
+            // Set the values
+            // For title
+            var title_text = 'Mandelbrot set '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
+            $('title').text(title_text);
+            // For inputs
+            $("input[name$='Xmin']").val(current_url[6]);
+            $("input[name$='Xmax']").val(current_url[8]);
+            $("input[name$='Ymin']").val(current_url[10]);
+            $("input[name$='Ymax']").val(current_url[12]);
+            // Set the picture
+            var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
+            $.get(query, function(){
+                $('#mset').hide();
+		$('#load').show();
+            }).done(function(data) {
+                var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
+                $('#mset').attr('src', img_string);
+		$('#load').hide();
+		$('#mset').show();
+            });
+            // Set the URL
+            window.history.replaceState({}, title_text, new_url);
         });
         $('img').on('mousemove', function(event) {
             $(this).css('cursor', 'none');
@@ -205,13 +230,33 @@ $(document).ready(function() {
             $("input[name$='Ymax']").val(y_max.toFixed(6));
         });
         // Form submit
-        $('form').submit(function(event) {
+        $('#coordinateForm').submit(function(event) {
             event.preventDefault();
             current_url[6] = $("input[name$='Xmin']").val();
             current_url[8] = $("input[name$='Xmax']").val();
             current_url[10] = $("input[name$='Ymin']").val();
             current_url[12] = $("input[name$='Ymax']").val();
-            window.location.href = makeString(current_url, '_');
+            var new_url = makeString(current_url, '_');
+            // Design
+            $('#mset').hide();
+	    $('#load').show();
+            // Set the values
+            // For title
+            var title_text = 'Mandelbrot set '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
+            $('title').text(title_text);
+            // Set the picture
+            var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
+            $.get(query, function(){
+                $('#mset').hide();
+		$('#load').show();
+            }).done(function(data) {
+                var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
+                $('#mset').attr('src', img_string);
+		$('#load').hide();
+		$('#mset').show();
+            });
+            // Set the URL
+            window.history.replaceState({}, title_text, new_url);
         });
         // Form reset
         $('#reset').click(function(event) {
