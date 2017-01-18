@@ -27,6 +27,12 @@ h2:hover {
     border: none;
 }
 
+h3 {
+    text-align: center;
+    font-size: 1.25em;
+    cursor: pointer;
+}
+
 a {
     text-decoration: none;
     outline: 0;
@@ -68,12 +74,21 @@ div {
 }
 
 #cursorRect {
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    height: 200px;
     position: fixed;
     border: 2px solid white;
     display: none;
     pointer-events: none;
+}
+
+span.language {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.underline {
+    text-decoration: underline;
 }
 
 #colorForm {
@@ -91,8 +106,17 @@ select {
     text-align: center;
 }
 
-#mset {
+section.side {
     display: none;
+}
+
+#img_holder {
+    width: 800px;
+    height: 800px;
+    margin: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 @media (max-width: 1169px) {

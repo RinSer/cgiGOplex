@@ -1,0 +1,29 @@
+{
+
+    "textId" : {
+        "pageTitle" : "Множество Мандельброта",
+        "realValues" : "Действительные значения",
+        "imaginaryValues" : "Мнимые значения",
+        "back" : "Назад",
+        "colorScheme" : "Схема цветов",
+        "black" : "Чёрный фон",
+        "white" : "Белый фон",
+        "redText" : "красный",
+        "greenText" : "зелёный",
+        "blueText" : "синий",
+        "juliaSet" : "Множество Жюлиа"
+    },
+    "textClass" : {
+        "From" : "От",
+        "To" : "До"
+    },
+    "valueId" : {
+        "submit" : "Показать",
+        "reset" : "Сбросить",
+        "changeButton" : "Изменить"
+    },
+    "hrefId" : {
+        "wiki" : "https://ru.wikipedia.org/wiki/Множество_Мандельброта"
+    }
+
+}

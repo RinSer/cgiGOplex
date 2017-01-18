@@ -31,6 +31,10 @@ $(document).ready(function() {
             } else {
                 width = height;
             }
+            $('#cursorRect').width(width/4);
+            $('#cursorRect').height(width/4);
+            $('#img_holder').width(width);
+            $('#img_holder').height(width);
         } else {
             width = 800;
         }
@@ -40,16 +44,62 @@ $(document).ready(function() {
             } else {
                 height = width;
             }
+            $('#cursorRect').width(width/4);
+            $('#cursorRect').height(width/4);
+            $('#img_holder').width(width);
+            $('#img_holder').height(width);
         } else {
             height = 800;
         }
+        // Zoom rect offset
+        var offset = width/8;
         var current_url = window.location.href;
         current_url = current_url.split('_');
         if (current_url.length < 2) {
-            var wh = '?_r_'+width+'_x_'+height+'_Xmin_-2_Xmax_0.75_Ymin_-1.5_Ymax_1.5_w_b';
+            var language = window.navigator.language || window.navigator.userLanguage;
+            language = language.split('-')[0];
+            var wh = '?_'+language+'_'+width+'_x_'+height+'_Xmin_-2_Xmax_0.75_Ymin_-1.5_Ymax_1.5_w_b';
             window.location.href = window.location.href+wh;
         }
         else {
+            // Initialize cash stack
+            var cash_stack = [];
+            // Set the language if necessary
+            var html_title = 'Mandelbrot set ';
+            if (current_url[1] == 'ru') {
+                $('#rus').addClass('underline');
+                html_title = 'Множество Мандельброта ';
+                $('title').text(html_title);
+                // Get the language strings from a file
+                $.getJSON('ru.json', function(data) {
+                    $.each(data, function(id, content) {
+                        switch (id) {
+                            case 'textId':
+                                $.each(content, function(key, value) {
+                                    $('#'+key).text(value);
+                                });
+                                break;
+                            case 'textClass':
+                                $.each(content, function(key, value) {
+                                    $('.'+key).text(value);
+                                });
+                                break;
+                            case 'valueId':
+                                $.each(content, function(key, value) {
+                                    $('#'+key).val(value);
+                                });
+                                break;
+                            case 'hrefId':
+                                $.each(content, function(key, value) {
+                                    $('#'+key).attr('href', value);
+                                });
+                                break;
+                        }
+                    });
+                });
+            } else {
+                $('#eng').addClass('underline');
+            }
             // Set the values
             // For title
             var title_text = $('title').text() +current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
@@ -62,13 +112,11 @@ $(document).ready(function() {
             // Set the picture
             var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
             $.get(query, function(){
-                $('#mset').hide();
-		$('#load').show();
+		        $('#load').show();
             }).done(function(data) {
                 var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
-                $('#mset').attr('src', img_string);
-		$('#load').hide();
-		$('#mset').show();
+                $('#img_holder').css('background', 'url('+img_string+')');
+		        $('#load').hide();
             });
             // Set the color scheme
             var background_color = current_url[13];
@@ -80,6 +128,7 @@ $(document).ready(function() {
                     $('body').css('background', 'black');
                     $('#cursorRect').css('border-color', 'rgba(255, 255, 255, 0.66)');
                     jqHover('h2', 'color', 'black');
+                    jqHover('h3', 'color', 'black');
                     jqHover('a', 'color', 'black');
                     $('select').css('color', 'black');
                     bc = 'black';
@@ -89,6 +138,7 @@ $(document).ready(function() {
                     $('body').css('background', 'white');
                     $('#cursorRect').css('border-color', 'rgba(0, 0, 0, 0.66)');
                     jqHover('h2', 'color', 'white');
+                    jqHover('h3', 'color', 'white');
                     jqHover('a', 'color', 'white');
                     $('select').css('color', 'white');
                     bc = 'white';
@@ -132,6 +182,7 @@ $(document).ready(function() {
             $('a').css('color', current_color);
             $('h2').css('border-color', current_color);
             jqHover('h2', 'background-color', current_color);
+            jqHover('h3', 'background-color', current_color);
             $('input').css('color', current_color);
             $('select').css('background-color', current_color);
             $('input').focus(function() {
@@ -141,9 +192,13 @@ $(document).ready(function() {
                 $(this).css('background-color', 'transparent');
                 $(this).css('color', current_color);
             });
+            // Display the forms
+            $('section.side').show();
         }
         // Event listeners
-        $('img').on('click', function(event) {
+        $('#img_holder').on('click', function(event) {
+            // Cash the current url
+            cash_stack.push(makeString(current_url, '_'));
             // current_url convertion
             // Extract the current current_url from the url
             var xresolution = parseFloat(current_url[2]);
@@ -154,45 +209,62 @@ $(document).ready(function() {
             var y_max = parseFloat(current_url[12]);
             var new_x = event.pageX - this.offsetLeft;
             var new_y = event.pageY - this.offsetTop;
-            var x_mn = x_min+((new_x-80)/xresolution)*(x_max-x_min);
-            var x_mx = x_min+((new_x+80)/xresolution)*(x_max-x_min);
-            var y_mn = y_min+((new_y-80)/yresolution)*(y_max-y_min);
-            var y_mx = y_min+((new_y+80)/yresolution)*(y_max-y_min);
-            current_url[6] = String(x_mn.toFixed(12));
-            current_url[8] = String(x_mx.toFixed(12));
-            current_url[10] = String(y_mn.toFixed(12));
-            current_url[12] = String(y_mx.toFixed(12));
+            var x_mn = x_min+((new_x-offset)/xresolution)*(x_max-x_min);
+            var x_mx = x_min+((new_x+offset)/xresolution)*(x_max-x_min);
+            var y_mn = y_min+((new_y-offset)/yresolution)*(y_max-y_min);
+            var y_mx = y_min+((new_y+offset)/yresolution)*(y_max-y_min);
+            current_url[6] = String(x_mn.toFixed(16));
+            current_url[8] = String(x_mx.toFixed(16));
+            current_url[10] = String(y_mn.toFixed(16));
+            current_url[12] = String(y_mx.toFixed(16));
             var new_url = makeString(current_url, '_');
-            // Design
-            $('#mset').hide();
-	    $('#load').show();
             // Set the values
             // For title
-            var title_text = 'Mandelbrot set '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
+            var title_text = html_title+' '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
             $('title').text(title_text);
             // For inputs
             $("input[name$='Xmin']").val(current_url[6]);
             $("input[name$='Xmax']").val(current_url[8]);
             $("input[name$='Ymin']").val(current_url[10]);
             $("input[name$='Ymax']").val(current_url[12]);
+            // Zoom in
+            $(document).ajaxStart(function() {
+                var x_position = 4*(new_x-offset);
+                var y_position = 4*(new_y-offset);
+                $({size: 100, x_shift: 0, y_shift: 0}).animate({ 
+                    size : 400,
+                    x_shift : x_position,
+                    y_shift : y_position
+                  }, 
+                  { 
+                    duration : 500,
+                    step : function() {
+                      var current_size = Math.round(this.size)+'%';
+                      var current_position = '-'+Math.round(this.x_shift)+'px -'+Math.round(this.y_shift)+'px';
+                      $('#img_holder').css({
+                        'background-size' : current_size,
+                        'background-position' : current_position
+                      });
+                    }
+                });
+            });
             // Set the picture
             var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
-            $.get(query, function(){
-                $('#mset').hide();
-		$('#load').show();
-            }).done(function(data) {
+            $.get(query, function(data) {
                 var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
-                $('#mset').attr('src', img_string);
-		$('#load').hide();
-		$('#mset').show();
+                $('#img_holder').css({
+                    'background' : 'url('+img_string+')',
+                    'background-size' : '100%',
+                    'background-position' : '0px 0px'
+                });
             });
             // Set the URL
             window.history.replaceState({}, title_text, new_url);
         });
-        $('img').on('mousemove', function(event) {
+        $('#img_holder').on('mousemove', function(event) {
             $(this).css('cursor', 'none');
-            var x = event.pageX - 80;
-            var y = event.pageY - 80;
+            var x = event.pageX - offset;
+            var y = event.pageY - offset;
             $('#cursorRect').css('top', y).css('left', x);
             var xresolution = parseFloat(current_url[2]);
             var yresolution = parseFloat(current_url[4]);
@@ -202,58 +274,58 @@ $(document).ready(function() {
             var y_max = parseFloat(current_url[12]);
             var new_x = event.pageX - this.offsetLeft;
             var new_y = event.pageY - this.offsetTop;
-            x_mn = x_min+((new_x-80)/xresolution)*(x_max-x_min);
-            x_mx = x_min+((new_x+80)/xresolution)*(x_max-x_min);
-            y_mn = y_min+((new_y-80)/yresolution)*(y_max-y_min);
-            y_mx = y_min+((new_y+80)/yresolution)*(y_max-y_min);
-            $("input[name$='Xmin']").val(x_mn.toFixed(12));
-            $("input[name$='Ymin']").val(y_mn.toFixed(12));
-            $("input[name$='Xmax']").val(x_mx.toFixed(12));
-            $("input[name$='Ymax']").val(y_mx.toFixed(12));
+            x_mn = x_min+((new_x-offset)/xresolution)*(x_max-x_min);
+            x_mx = x_min+((new_x+offset)/xresolution)*(x_max-x_min);
+            y_mn = y_min+((new_y-offset)/yresolution)*(y_max-y_min);
+            y_mx = y_min+((new_y+offset)/yresolution)*(y_max-y_min);
+            $("input[name$='Xmin']").val(x_mn.toFixed(16));
+            $("input[name$='Ymin']").val(y_mn.toFixed(16));
+            $("input[name$='Xmax']").val(x_mx.toFixed(16));
+            $("input[name$='Ymax']").val(y_mx.toFixed(16));
         });
-        $('img').on('mouseenter', function(event) {
-            var x = event.pageX - 80;
-            var y = event.pageY - 80;
+        $('#img_holder').on('mouseenter', function(event) {
+            var x = event.pageX - offset;
+            var y = event.pageY - offset;
             $('#cursorRect').css('top', y).css('left', x);
             $('#cursorRect').show();
         });
-        $('img').on('mouseleave', function(event) {
+        $('#img_holder').on('mouseleave', function(event) {
             $('#cursorRect').hide();
             // Extract the current current_url back from the url
             var x_min = parseFloat(current_url[6]);
             var x_max = parseFloat(current_url[8]);
             var y_min = parseFloat(current_url[10]);
             var y_max = parseFloat(current_url[12]);
-            $("input[name$='Xmin']").val(x_min.toFixed(6));
-            $("input[name$='Ymin']").val(y_min.toFixed(6));
-            $("input[name$='Xmax']").val(x_max.toFixed(6));
-            $("input[name$='Ymax']").val(y_max.toFixed(6));
+            $("input[name$='Xmin']").val(x_min.toFixed(16));
+            $("input[name$='Ymin']").val(y_min.toFixed(16));
+            $("input[name$='Xmax']").val(x_max.toFixed(16));
+            $("input[name$='Ymax']").val(y_max.toFixed(16));
         });
         // Form submit
         $('#coordinateForm').submit(function(event) {
             event.preventDefault();
+            // Cash the current url
+            cash_stack.push(makeString(current_url, '_'));
+            // Process the form values
             current_url[6] = $("input[name$='Xmin']").val();
             current_url[8] = $("input[name$='Xmax']").val();
             current_url[10] = $("input[name$='Ymin']").val();
             current_url[12] = $("input[name$='Ymax']").val();
             var new_url = makeString(current_url, '_');
             // Design
-            $('#mset').hide();
-	    $('#load').show();
+	        $('#load').show();
             // Set the values
             // For title
-            var title_text = 'Mandelbrot set '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
+            var title_text = html_title+' '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
             $('title').text(title_text);
             // Set the picture
             var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
             $.get(query, function(){
-                $('#mset').hide();
-		$('#load').show();
+		        $('#load').show();
             }).done(function(data) {
                 var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
-                $('#mset').attr('src', img_string);
-		$('#load').hide();
-		$('#mset').show();
+                $('#img_holder').css('background', 'url('+img_string+')');
+		        $('#load').hide();
             });
             // Set the URL
             window.history.replaceState({}, title_text, new_url);
@@ -285,5 +357,47 @@ $(document).ready(function() {
             }
             current_url[14] = new_color;
             window.location.href = makeString(current_url, '_');
+        });
+        // Change page language
+        $('#eng').on('click', function() {
+            if (current_url[1] != 'en') {
+                current_url[1] = 'en';
+                window.location.href = makeString(current_url, '_');
+            }
+        });
+        $('#rus').on('click', function() {
+            if (current_url[1] != 'ru') {
+                current_url[1] = 'ru';
+                window.location.href = makeString(current_url, '_');
+            }
+        });
+        // Step back
+        $('#back').on('click', function() {
+            if (cash_stack.length > 0) {
+                var old_values = cash_stack.pop().split('_');
+                console.log(old_values);
+                current_url[6] = old_values[6];
+                current_url[8] = old_values[8];
+                current_url[10] = old_values[10];
+                current_url[12] = old_values[12];
+                var new_url = makeString(current_url, '_');
+                // Design
+	            $('#load').show();
+                // Set the values
+                // For title
+                var title_text = html_title+' '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
+                $('title').text(title_text);
+                // Set the picture
+                var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
+                $.get(query, function(){
+		            $('#load').show();
+                }).done(function(data) {
+                    var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
+                    $('#img_holder').css('background', 'url('+img_string+')');
+		            $('#load').hide();
+                });
+                // Set the URL
+                window.history.replaceState({}, title_text, new_url);
+            }
         });
 });
