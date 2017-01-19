@@ -1,3 +1,11 @@
+/**
+ * Mandelbrot set images rendering web app interface.
+ *
+ * created by RinSer
+ * @ 2017
+ */
+
+
 function makeString(array, separator) {
     var new_str = "";
     for (var i = 0; i < array.length; i++) {
@@ -199,6 +207,7 @@ $(document).ready(function() {
         $('#img_holder').on('click', function(event) {
             // Cash the current url
             cash_stack.push(makeString(current_url, '_'));
+            $('#back').show();
             // current_url convertion
             // Extract the current current_url from the url
             var xresolution = parseFloat(current_url[2]);
@@ -306,6 +315,7 @@ $(document).ready(function() {
             event.preventDefault();
             // Cash the current url
             cash_stack.push(makeString(current_url, '_'));
+            $('#back').show();
             // Process the form values
             current_url[6] = $("input[name$='Xmin']").val();
             current_url[8] = $("input[name$='Xmax']").val();
@@ -375,7 +385,13 @@ $(document).ready(function() {
         $('#back').on('click', function() {
             if (cash_stack.length > 0) {
                 var old_values = cash_stack.pop().split('_');
-                console.log(old_values);
+                if (cash_stack.length == 0) $(this).hide();
+		        // Adjust form values
+		        $("input[name$='Xmin']").val(old_values[6]);
+                $("input[name$='Ymin']").val(old_values[10]);
+                $("input[name$='Xmax']").val(old_values[8]);
+                $("input[name$='Ymax']").val(old_values[12]);
+                // Adjust url values
                 current_url[6] = old_values[6];
                 current_url[8] = old_values[8];
                 current_url[10] = old_values[10];
