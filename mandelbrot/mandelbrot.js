@@ -120,11 +120,11 @@ $(document).ready(function() {
             // Set the picture
             var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
             $.get(query, function(){
-		        $('#load').show();
+		$('#load').show();
             }).done(function(data) {
                 var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
                 $('#img_holder').css('background', 'url('+img_string+')');
-		        $('#load').hide();
+		$('#load').hide();
             });
             // Set the color scheme
             var background_color = current_url[13];
@@ -136,8 +136,9 @@ $(document).ready(function() {
                     $('body').css('background', 'black');
                     $('#cursorRect').css('border-color', 'rgba(255, 255, 255, 0.66)');
                     jqHover('h2', 'color', 'black');
-                    jqHover('h3', 'color', 'black');
                     jqHover('a', 'color', 'black');
+                    $('#back').css('color', 'black');
+                    $('#back').css('background-color', 'black');
                     $('select').css('color', 'black');
                     bc = 'black';
                     $('#black').prop('selected', true);
@@ -146,8 +147,9 @@ $(document).ready(function() {
                     $('body').css('background', 'white');
                     $('#cursorRect').css('border-color', 'rgba(0, 0, 0, 0.66)');
                     jqHover('h2', 'color', 'white');
-                    jqHover('h3', 'color', 'white');
                     jqHover('a', 'color', 'white');
+                    $('#back').css('color', 'white');
+                    $('#back').css('background-color', 'white');
                     $('select').css('color', 'white');
                     bc = 'white';
                     $('#white').prop('selected', true);
@@ -190,7 +192,6 @@ $(document).ready(function() {
             $('a').css('color', current_color);
             $('h2').css('border-color', current_color);
             jqHover('h2', 'background-color', current_color);
-            jqHover('h3', 'background-color', current_color);
             $('input').css('color', current_color);
             $('select').css('background-color', current_color);
             $('input').focus(function() {
@@ -207,7 +208,8 @@ $(document).ready(function() {
         $('#img_holder').on('click', function(event) {
             // Cash the current url
             cash_stack.push(makeString(current_url, '_'));
-            $('#back').show();
+            $('#back').prop('disabled', false);
+            $('#back').css('background-color', current_color);
             // current_url convertion
             // Extract the current current_url from the url
             var xresolution = parseFloat(current_url[2]);
@@ -246,7 +248,7 @@ $(document).ready(function() {
                     y_shift : y_position
                   }, 
                   { 
-                    duration : 500,
+                    duration : 300,
                     step : function() {
                       var current_size = Math.round(this.size)+'%';
                       var current_position = '-'+Math.round(this.x_shift)+'px -'+Math.round(this.y_shift)+'px';
@@ -315,7 +317,8 @@ $(document).ready(function() {
             event.preventDefault();
             // Cash the current url
             cash_stack.push(makeString(current_url, '_'));
-            $('#back').show();
+            $('#back').prop('disabled', false);
+            $('#back').css('background-color', current_color);
             // Process the form values
             current_url[6] = $("input[name$='Xmin']").val();
             current_url[8] = $("input[name$='Xmax']").val();
@@ -323,7 +326,7 @@ $(document).ready(function() {
             current_url[12] = $("input[name$='Ymax']").val();
             var new_url = makeString(current_url, '_');
             // Design
-	        $('#load').show();
+	    $('#load').show();
             // Set the values
             // For title
             var title_text = html_title+' '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
@@ -331,11 +334,11 @@ $(document).ready(function() {
             // Set the picture
             var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
             $.get(query, function(){
-		        $('#load').show();
+		$('#load').show();
             }).done(function(data) {
                 var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
                 $('#img_holder').css('background', 'url('+img_string+')');
-		        $('#load').hide();
+		$('#load').hide();
             });
             // Set the URL
             window.history.replaceState({}, title_text, new_url);
@@ -385,9 +388,13 @@ $(document).ready(function() {
         $('#back').on('click', function() {
             if (cash_stack.length > 0) {
                 var old_values = cash_stack.pop().split('_');
-                if (cash_stack.length == 0) $(this).hide();
-		        // Adjust form values
-		        $("input[name$='Xmin']").val(old_values[6]);
+                if (cash_stack.length == 0) {
+                    $(this).prop('disabled', true);
+                    var back_color = $('body').css('background-color');
+                    $(this).css('background-color', back_color);
+                }
+		// Adjust form values
+		$("input[name$='Xmin']").val(old_values[6]);
                 $("input[name$='Ymin']").val(old_values[10]);
                 $("input[name$='Xmax']").val(old_values[8]);
                 $("input[name$='Ymax']").val(old_values[12]);
@@ -398,7 +405,7 @@ $(document).ready(function() {
                 current_url[12] = old_values[12];
                 var new_url = makeString(current_url, '_');
                 // Design
-	            $('#load').show();
+	        $('#load').show();
                 // Set the values
                 // For title
                 var title_text = html_title+' '+current_url[6]+' '+current_url[8]+' '+current_url[10]+' '+current_url[12];
@@ -406,11 +413,11 @@ $(document).ready(function() {
                 // Set the picture
                 var query = 'cgi-bin/mandelbrot?_'+makeString(current_url.slice(1), '_');
                 $.get(query, function(){
-		            $('#load').show();
+		    $('#load').show();
                 }).done(function(data) {
                     var img_string = 'data:image/png;base64,'+data.split('Status:')[0].trim();
                     $('#img_holder').css('background', 'url('+img_string+')');
-		            $('#load').hide();
+		    $('#load').hide();
                 });
                 // Set the URL
                 window.history.replaceState({}, title_text, new_url);
