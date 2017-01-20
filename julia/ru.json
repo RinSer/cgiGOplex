@@ -1,0 +1,30 @@
+{
+
+    "textId" : {
+        "pageTitle" : "Множество Жюлиа",
+        "complexParameter" : "Комплексный параметр",
+        "realValues" : "Действительные значения",
+        "imaginaryValues" : "Мнимые значения",
+        "back" : "Назад",
+        "colorScheme" : "Схема цветов",
+        "black" : "Чёрный фон",
+        "white" : "Белый фон",
+        "redText" : "красный",
+        "greenText" : "зелёный",
+        "blueText" : "синий",
+        "mandelbrotSet" : "Множество Мандельброта"
+    },
+    "textClass" : {
+        "From" : "От",
+        "To" : "До"
+    },
+    "valueId" : {
+        "submit" : "Показать",
+        "reset" : "Сбросить",
+        "changeButton" : "Изменить"
+    },
+    "hrefId" : {
+        "wiki" : "https://ru.wikipedia.org/wiki/Множество_Жюлиа"
+    }
+
+}

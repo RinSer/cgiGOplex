@@ -3,11 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Julia set images rendering application. Displays the julia complex numbers sets online dynamically for different complex parameters and coordinates. You may zoom in into the specific region of the image by clicking on it. Image colors may be changed using the color scheme options.">
+    <meta name="description" lang="en" content="Julia set images rendering application. Displays the julia complex numbers sets online dynamically for different complex parameters and coordinates. You may zoom in into the specific region of the image by clicking on it. Image colors may be changed using the color scheme options.">
     <meta name="keywords" content="Julia set, Julia, julia set, julia, complex, Complex set, Complex numbers, Fractal, Fractals, Complex fractals">
+    <meta name="description" lang="ru" content="Создание изображений множества Жюлиа онлайн. Динамично отображает множество комплексных чисел Жюлиа для различных координат и комплексных параметров. Изображения меньших областей фрактала можно рассмотреть в подробностях нажатием мыши. Цвета изображений можно менять с помощью меню Схема цветов.">
+    <meta name="keywords" lang="ru" content="Множество Жюлиа, Жюлиа, множество комплексных чисел, фрактал, комплексный фрактал">
     <meta name="author" content="RinSer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Julia set f(x) = z^2+c</title>
+    <title>Julia set</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
     <script src="load.js"></script>
@@ -18,57 +20,58 @@
 <body>
 
     <section class="col-lg-3 side">
-        <h1>Julia set</h1>
+        <h1 id="pageTitle">Julia set</h1>
         <form id="coordinateForm" method="POST">
           <fieldset>
-              <legend>Complex parameter</legend>
+              <legend id="complexParameter">Complex parameter</legend>
               Re:<br>
-              <input type="number" step="0.000000000001" name="ReC" value=""><br>
+              <input type="number" step="0.0000000000000001" name="ReC" value=""><br>
               Im:<br>
-              <input type="number" step="0.000000000001" name="ImC" value=""><br><br>
+              <input type="number" step="0.0000000000000001" name="ImC" value=""><br><br>
           </fieldset>
           <br>
           <fieldset>
-              <legend>Real values</legend>
-              From:<br>
-              <input type="number" step="0.000000000001" name="Xmin" value=""><br>
-              To:<br>
-              <input type="number" step="0.000000000001" name="Xmax" value=""><br><br>
+              <legend id="realValues">Real values</legend>
+              <span class="From">From:</span><br>
+              <input type="number" step="0.0000000000000001" name="Xmin" value=""><br>
+              <span class="To">To:</span><br>
+              <input type="number" step="0.0000000000000001" name="Xmax" value=""><br><br>
           </fieldset>
           <br>
           <fieldset>
-              <legend>Imaginary values</legend>
-              From:<br>
-              <input type="number" step="0.000000000001" name="Ymin" value=""><br>
-              To:<br>
-              <input type="number" step="0.000000000001" name="Ymax" value=""><br><br>
+              <legend id="imaginaryValues">Imaginary values</legend>
+              <span class="From">From:</span><br>
+              <input type="number" step="0.0000000000000001" name="Ymin" value=""><br>
+              <span class="To">To:</span><br>
+              <input type="number" step="0.0000000000000001" name="Ymax" value=""><br><br>
           </fieldset>
           <input id="submit" type="submit" value="Submit">
           <input id="reset" type="reset" value="Reset">
         </form> 
+        <button id="back" disabled>Back</button>
     </section>
     <section class="col-lg-3 middle">
-        <div>
+        <div id="img_holder">
             <div id="load"></div>
-            <img id="jset" src=""/>
 	</div>
-        <div id="cursorRect"></div>
     </section>
     <section class="col-lg-3 side">
+        <div><span id="eng" class="language">En</span>&nbsp;<span id="rus" class="language">Ru</span></div>
         <h2 id="colorScheme">Color scheme</h2>
         <form id="colorForm">
             <select id="backgroundColor" name="backgroundColor" form="colorForm">
               <option id="black" value="b">Black background</option>
               <option id="white" value="w">White background</option>
             </select>
-            <input type="checkbox" id="redColor" name="redColor" value="r">Red<br>
-            <input type="checkbox" id="greenColor" name="greenColor" value="g">Green<br>
-            <input type="checkbox" id="blueColor" name="blueColor" value="b">Blue<br>
-            <input type="submit" value="Change">
+            <input type="checkbox" id="redColor" name="redColor" value="r"><span id="redText">Red</span><br>
+            <input type="checkbox" id="greenColor" name="greenColor" value="g"><span id="greenText">Green</span><br>
+            <input type="checkbox" id="blueColor" name="blueColor" value="b"><span id="blueText">Blue</span><br>
+            <input type="submit" id="changeButton" value="Change">
         </form>
-        <a href="https://en.wikipedia.org/wiki/Julia_set" target="_blank"><h2>Wikipedia</h2></a>
-        <a href="http://mandelbrot.finengin.net" target="_blank"><h2>Mandelbrot set</h2></a>
+        <a id="wiki" href="https://en.wikipedia.org/wiki/Julia_set" target="_blank"><h2>Wikipedia</h2></a>
+        <a id="mandelbrot" href="http://mandelbrot.finengin.net" target="_blank"><h2 id="mandelbrotSet">Mandelbrot set</h2></a>
     </section>
+    <div id="cursorRect"></div>
 
 </body>
 

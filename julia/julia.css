@@ -27,9 +27,22 @@ h2:hover {
     border: none;
 }
 
+button#back {
+    text-align: center;
+    font-size: 1.25em;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
 a {
     text-decoration: none;
     outline: 0;
+}
+
+form {
+    text-align: center;
+    padding: 10px;
 }
 
 fieldset {
@@ -41,13 +54,18 @@ fieldset {
     padding-left: 0.75em;
     padding-right: 0.75em;
     border: none;
+    text-align: center;
+    max-width: 100%;
+    font-size: 0.75em;
 }
 
 input {
     background: none;
     border: none;
-    font-size: 1.5em;
+    font-size: 1.25em;
     cursor: pointer;
+    max-width: 100%;
+    text-align: center;
 }
 
 input:focus {
@@ -67,18 +85,22 @@ div {
     text-align: center;
 }
 
-canvas {
-    margin: 0;
-    padding: 0;
-}
-
 #cursorRect {
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    height: 200px;
     position: fixed;
     border: 2px solid white;
     display: none;
     pointer-events: none;
+}
+
+span.language {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.underline {
+    text-decoration: underline;
 }
 
 #colorForm {
@@ -90,19 +112,28 @@ select {
     border: none;
 }
 
-#jset {
-    display: none;
-}
-
-.col-lg-3 {
-    float: left;
+section.col-lg-3 {
     padding: 10px;
     text-align: center;
 }
 
+section.side {
+    display: none;
+}
+
+#img_holder {
+    width: 800px;
+    height: 800px;
+    margin: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
 @media (max-width: 1169px) {
 
-    .col-lg-3 {
+    section.col-lg-3 {
+        clear: both;
         width: 100%;
     }
 
@@ -116,6 +147,11 @@ select {
 
     section.side {
         width: 15%;
+    }
+
+    section.col-lg-3 {
+        clear: right;
+        float: left;
     }
 
 }
