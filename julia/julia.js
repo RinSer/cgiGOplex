@@ -207,6 +207,8 @@ $(document).ready(function() {
         }
         // Event listeners
         $('#img_holder').on('click', function(event) {
+            // Hide the rect
+            $('#cursorRect').hide();
             // Cash the current url
             cash_stack.push(makeString(current_url, '_'));
             $('#back').prop('disabled', false);
@@ -277,6 +279,7 @@ $(document).ready(function() {
             window.history.replaceState({}, title_text, new_url);
         });
         $('#img_holder').on('mousemove', function(event) {
+            $('#cursorRect').show();
             $(this).css('cursor', 'none');
             var x = event.pageX - 80;
             var y = event.pageY - 80;
